@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Care - Admin Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            background-image: url('Home.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Animated gradient overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 77, 179, 0.85) 0%, rgba(45, 224, 188, 0.85) 100%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 0 5%;
+            height: 13vh;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 28px;
+            color: #1A4DB3;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.03);
+        }
+        
+        .logo img {
+            height: 65px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+            transition: right 0.4s ease;
+        }
+        
+        .nav-links a:not(.login) {
+            color: #1A4DB3;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:not(.login)::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 5px;
+            width: 0;
+            height: 2px;
+            background-color: #2de0bc;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:not(.login):hover {
+            color: #2de0bc;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a:not(.login):hover::after {
+            width: 70%;
+        }
+        
+        .login {
+            border-radius: 40px;
+            background-color: #2de0bc;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 15px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(45, 224, 188, 0.3);
+        }
+        
+        .login:hover {
+            background-color: #1fd4b0;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 15px rgba(45, 224, 188, 0.4);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            z-index: 1001;
+        }
+        
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background-color: #1A4DB3;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Hamburger animation */
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 8px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -8px);
+        }
+
+        /* Registration Form Styles */
+        .form-container {
+            max-width: 600px;
+            margin: 150px auto 50px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            animation: formAppear 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes formAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-header h1 {
+            color: #1A4DB3;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .form-header h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: #2de0bc;
+            border-radius: 2px;
+        }
+        
+        .form-header p {
+            color: #666;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #1A4DB3;
+            box-shadow: 0 0 0 3px rgba(26, 77, 179, 0.2);
+            outline: none;
+            transform: translateY(-2px);
+        }
+        
+        .form-group i {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            color: #1A4DB3;
+            font-size: 18px;
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1A4DB3 0%, #2de0bc 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(26, 77, 179, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 77, 179, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(26, 77, 179, 0.3);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5eb;
+        }
+        
+        .form-footer p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .form-footer a {
+            color: #1A4DB3;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .form-footer a::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #2de0bc;
+            transition: width 0.3s ease;
+        }
+        
+        .form-footer a:hover {
+            color: #2de0bc;
+        }
+        
+        .form-footer a:hover::after {
+            width: 100%;
+        }
+        
+        /* Password strength indicator */
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background: #eee;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak {
+            background: #ff4757;
+            width: 33%;
+        }
+        
+        .strength-medium {
+            background: #ffa502;
+            width: 66%;
+        }
+        
+        .strength-strong {
+            background: #2ed573;
+            width: 100%;
+        }
+        
+        .strength-text {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #666;
+            text-align: right;
+        }
+        
+        /* Form validation styles */
+        .form-group.success input,
+        .form-group.success select {
+            border-color: #2ed573;
+        }
+        
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #ff4757;
+        }
+        
+        .error-message {
+            color: #ff4757;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        /* Admin-specific styles */
+        .admin-key {
+            background: linear-gradient(135deg, #1A4DB3 0%, #2de0bc 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(26, 77, 179, 0.3);
+        }
+        
+        .admin-key h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .admin-key p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-links a:not(.login) {
+                padding: 14px 15px;
+                font-size: 17px;
+            }
+            
+            .login {
+                padding: 10px 20px;
+                font-size: 17px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 13vh;
+                right: -100%;
+                height: 87vh;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                width: 70%;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 50px;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links a:not(.login) {
+                margin: 15px 0;
+                font-size: 20px;
+            }
+            
+            .form-container {
+                margin: 130px 20px 40px;
+                padding: 30px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 22px;
+            }
+            
+            .logo img {
+                height: 55px;
+            }
+            
+            .form-container {
+                padding: 25px 20px;
+            }
+            
+            .form-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Medical Care Logo">Medical Care
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#features">Services</a>
+            <a href="index.html">About</a>
+            <a href="index.html#contact">Contact Us</a>
+            <a href="index.html" class="login">Login</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Admin Registration</h1>
+            <p>Create an administrator account for Medical Care</p>
+        </div>
+        
+        <div class="admin-key">
+            <h3><i class="fas fa-key"></i> Administrator Access Required</h3>
+            <p>You must have a valid admin authorization key to register an administrator account. Please contact system administrators to obtain this key.</p>
+        </div>
+        
+        <form id="adminRegistrationForm" method="post" action="AdminRegisterServlet" method="post">
+            <!-- Personal Information Section -->
+            <h3 style="color: #1A4DB3; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid #2de0bc;">Personal Information</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="firstName" name="fullName" required placeholder="Enter your full name">
+                    <i class="fas fa-user"></i>
+                    <div class="error-message">Full name is required</div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div class="error-message">Please select your gender</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                    <div class="error-message">Please enter your date of birth</div>
+                </div>
+            </div>
+            
+            <!-- Admin Information Section -->
+            <!-- <h3 style="color: #1A4DB3; margin: 25px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #2de0bc;">Admin Information</h3>
+            
+           
+            
+            <div class="form-group">
+                <label for="adminKey">Admin Authorization Key</label>
+                <input type="password" id="adminKey" name="adminKey" required placeholder="Enter authorization key">
+                <i class="fas fa-key password-toggle" id="adminKeyToggle"></i>
+                <div class="error-message">Valid authorization key is required</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="adminRole">Admin Role</label>
+                <select id="adminRole" name="adminRole" required>
+                    <option value="">Select Admin Role</option>
+                    <option value="super">Super Administrator</option>
+                    <option value="hospital">Hospital Administrator</option>
+                    <option value="department">Department Administrator</option>
+                    <option value="support">Support Administrator</option>
+                </select>
+                <div class="error-message">Please select your admin role</div>
+            </div> -->
+            
+            
+            
+            
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" name="contact" required placeholder="Enter your phone number">
+                    <i class="fas fa-phone"></i>
+                    <div class="error-message">Please enter a valid phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emergencyContact">Emergency Contact</label>
+                    <input type="tel" id="emergencyContact" name="emergencyContact" required placeholder="Emergency contact number">
+                    <i class="fas fa-phone"></i>
+                    <div class="error-message">Please enter a valid emergency contact</div>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            <!-- Account Security Section -->
+            <h3 style="color: #1A4DB3; margin: 25px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #2de0bc;">Account Security</h3>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                <i class="fas fa-envelope"></i>
+                <div class="error-message">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                <i class="fas fa-lock password-toggle" id="passwordToggle"></i>
+                <div class="password-strength">
+                    <div class="strength-meter" id="strengthMeter"></div>
+                </div>
+                <div class="strength-text" id="strengthText">Password strength</div>
+                <div class="error-message">Password must be at least 8 characters</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                <i class="fas fa-lock password-toggle" id="confirmPasswordToggle"></i>
+                <div class="error-message">Passwords do not match</div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span>Register as Administrator</span>
+            </button>
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="index.html">Sign in here</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.height = '10vh';
+                navbar.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+            } else {
+                navbar.style.height = '13vh';
+                navbar.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // Password visibility toggle
+        const passwordToggle = document.getElementById('passwordToggle');
+        const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+        const adminKeyToggle = document.getElementById('adminKeyToggle');
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+        const adminKeyField = document.getElementById('adminKey');
+
+        passwordToggle.addEventListener('click', () => {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordToggle.classList.remove('fa-lock');
+                passwordToggle.classList.add('fa-unlock');
+            } else {
+                passwordField.type = 'password';
+                passwordToggle.classList.remove('fa-unlock');
+                passwordToggle.classList.add('fa-lock');
+            }
+        });
+
+        confirmPasswordToggle.addEventListener('click', () => {
+            if (confirmPasswordField.type === 'password') {
+                confirmPasswordField.type = 'text';
+                confirmPasswordToggle.classList.remove('fa-lock');
+                confirmPasswordToggle.classList.add('fa-unlock');
+            } else {
+                confirmPasswordField.type = 'password';
+                confirmPasswordToggle.classList.remove('fa-unlock');
+                confirmPasswordToggle.classList.add('fa-lock');
+            }
+        });
+
+        adminKeyToggle.addEventListener('click', () => {
+            if (adminKeyField.type === 'password') {
+                adminKeyField.type = 'text';
+                adminKeyToggle.classList.remove('fa-lock');
+                adminKeyToggle.classList.add('fa-unlock');
+            } else {
+                adminKeyField.type = 'password';
+                adminKeyToggle.classList.remove('fa-unlock');
+                adminKeyToggle.classList.add('fa-lock');
+            }
+        });
+
+        // Password strength indicator
+        const strengthMeter = document.getElementById('strengthMeter');
+        const strengthText = document.getElementById('strengthText');
+
+        passwordField.addEventListener('input', () => {
+            const password = passwordField.value;
+            let strength = 0;
+            
+            // Check password length
+            if (password.length > 7) strength += 1;
+            
+            // Check for mixed case
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
+            
+            // Check for numbers
+            if (password.match(/([0-9])/)) strength += 1;
+            
+            // Check for special characters
+            if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) strength += 1;
+            
+            // Update strength meter
+            switch(strength) {
+                case 0:
+                    strengthMeter.className = 'strength-meter';
+                    strengthText.textContent = 'Password strength';
+                    strengthText.style.color = '#666';
+                    break;
+                case 1:
+                    strengthMeter.className = 'strength-meter strength-weak';
+                    strengthText.textContent = 'Weak password';
+                    strengthText.style.color = '#ff4757';
+                    break;
+                case 2:
+                    strengthMeter.className = 'strength-meter strength-medium';
+                    strengthText.textContent = 'Medium password';
+                    strengthText.style.color = '#ffa502';
+                    break;
+                case 3:
+                    strengthMeter.className = 'strength-meter strength-medium';
+                    strengthText.textContent = 'Good password';
+                    strengthText.style.color = '#ffa502';
+                    break;
+                case 4:
+                    strengthMeter.className = 'strength-meter strength-strong';
+                    strengthText.textContent = 'Strong password';
+                    strengthText.style.color = '#2ed573';
+                    break;
+            }
+        });
+
+        // Form validation
+        const form = document.getElementById('adminRegistrationForm');
+        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => validateInput(input));
+            input.addEventListener('input', () => {
+                if (input.parentElement.classList.contains('error')) {
+                    validateInput(input);
+                }
+            });
+        });
+        
+        function validateInput(input) {
+            const formGroup = input.parentElement;
+            
+            // Reset validation state
+            formGroup.classList.remove('success', 'error');
+            
+            // Validate based on input type
+            if (input.id === 'username') {
+                if (input.value.length < 3) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            if (input.id === 'email') {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(input.value)) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            if (input.id === 'password') {
+                if (input.value.length < 8) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            if (input.id === 'confirmPassword') {
+                const password = document.getElementById('password').value;
+                if (input.value !== password) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            if (input.id === 'contact' || input.id === 'emergencyContact') {
+                const phonePattern = /^[0-9]{10}$/;
+                if (!phonePattern.test(input.value.replace(/\D/g, ''))) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            if (input.id === 'adminKey') {
+                // In a real application, this would validate against a server
+                // For demo purposes, we'll use a simple validation
+                if (input.value.length < 10) {
+                    formGroup.classList.add('error');
+                    return false;
+                } else {
+                    formGroup.classList.add('success');
+                    return true;
+                }
+            }
+            
+            // Default validation for required fields
+            if (input.value.trim() === '') {
+                formGroup.classList.add('error');
+                return false;
+            } else {
+                formGroup.classList.add('success');
+                return true;
+            }
+        }
+        
+        form.addEventListener('submit', (e) => {
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateInput(input)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                // Add animation to first error field
+                const firstError = form.querySelector('.error');
+                if (firstError) {
+                    firstError.classList.add('animate__animated', 'animate__headShake');
+                    setTimeout(() => {
+                        firstError.classList.remove('animate__animated', 'animate__headShake');
+                    }, 1000);
+                }
+            } else {
+                // Form is valid - store data for dashboard
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    fullName: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+                    gender: document.getElementById('gender').value,
+                    dob: document.getElementById('dob').value,
+                    adminId: document.getElementById('adminId').value,
+                    adminRole: document.getElementById('adminRole').value,
+                    email: document.getElementById('email').value,
+                    contact: document.getElementById('contact').value,
+                    emergencyContact: document.getElementById('emergencyContact').value,
+                    username: document.getElementById('username').value
+                };
+                
+                // Store in localStorage for demonstration
+                localStorage.setItem('adminData', JSON.stringify(formData));
+                
+                // In a real application, this would be sent to the server
+                console.log('Form submitted successfully', formData);
+                
+                // Redirect to admin dashboard (in a real app, this would happen after successful server registration)
+                alert('Registration successful! You will be redirected to the admin dashboard.');
+                window.location.href = 'admin_dashboard.html'; // This page would need to be created
+            }
+        });
+    </script>
+</body>
+</html>
